@@ -3,164 +3,392 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>my chicken</title>
+    <title>My Chicken Calculator</title>
     <link rel="icon" href="Mursatas it.png" type="image/png">
     <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #FF7B25;
+            --primary-dark: #E64A19;
+            --secondary: #4CAF50;
+            --danger: #F44336;
+            --light: #F5F5F5;
+            --dark: #212121;
+            --gray: #757575;
+            --white: #FFFFFF;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 500px;
-            margin: 0 auto;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
             padding: 20px;
-            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+        
         .container {
-            background-color: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 480px;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            transform-origin: center;
         }
-        h1 {
-            color: #e67e22;
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 24px;
             text-align: center;
-            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
         }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255,255,255,0.3) 0%,
+                rgba(255,255,255,0) 60%
+            );
+            transform: rotate(30deg);
+            animation: shine 6s infinite linear;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            100% { transform: translateX(100%) rotate(30deg); }
+        }
+        
+        .header h1 {
+            font-weight: 600;
+            font-size: 22px;
+            margin-bottom: 8px;
+            line-height: 1.3;
+            position: relative;
+            animation: textReveal 0.8s ease-out;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.4;
+            position: relative;
+            animation: textReveal 0.8s ease-out 0.2s;
+            animation-fill-mode: both;
+        }
+        
+        @keyframes textReveal {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 0.9; transform: translateY(0); }
+        }
+        
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: var(--white);
+            clip-path: ellipse(50% 50% at 50% 50%);
+        }
+        
+        .content {
+            padding: 24px;
+        }
+        
         .input-group {
             margin-bottom: 20px;
+            position: relative;
+            animation: slideUp 0.6s ease-out;
+            animation-fill-mode: both;
         }
-        label {
+        
+        .input-group:nth-child(1) { animation-delay: 0.3s; }
+        .input-group:nth-child(2) { animation-delay: 0.4s; }
+        .input-group:nth-child(3) { animation-delay: 0.5s; }
+        .input-group:nth-child(4) { animation-delay: 0.6s; }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .input-group label {
             display: block;
+            font-weight: 500;
             margin-bottom: 8px;
-            font-weight: 600;
-            color: #555;
+            color: var(--dark);
+            font-size: 15px;
+            line-height: 1.4;
         }
-        input {
+        
+        .input-group input {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 16px;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: var(--light);
+            line-height: 1.5;
         }
-        button {
-            background-color: #e67e22;
-            color: white;
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 123, 37, 0.2);
+            transform: scale(1.01);
+        }
+        
+        .info-text {
+            font-size: 13px;
+            color: var(--gray);
+            margin-top: 8px;
+            line-height: 1.4;
+            display: block;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
             border: none;
             padding: 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 15px;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #d35400;
-        }
-        .result-box {
-            margin-top: 25px;
-            padding: 20px;
-            background-color: #f8f9fa;
             border-radius: 8px;
-            display: none;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 16px;
+            box-shadow: 0 4px 12px rgba(230, 74, 25, 0.3);
+            line-height: 1.5;
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out 0.7s;
+            animation-fill-mode: both;
         }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(230, 74, 25, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255,255,255,0.3) 0%,
+                rgba(255,255,255,0) 60%
+            );
+            transform: rotate(30deg);
+            transition: all 0.6s ease;
+        }
+        
+        .btn:hover::after {
+            animation: shine 1.5s infinite linear;
+        }
+        
+        .result-box {
+            margin-top: 24px;
+            padding: 20px;
+            background-color: var(--light);
+            border-radius: 12px;
+            display: none;
+            animation: fadeInScale 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
         .result-title {
             font-size: 18px;
-            margin-top: 0;
-            color: #333;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed #e0e0e0;
+            line-height: 1.4;
         }
+        
         .result-item {
-            margin: 15px 0;
             display: flex;
             justify-content: space-between;
+            margin-bottom: 12px;
+            line-height: 1.5;
+            opacity: 0;
+            transform: translateX(-10px);
+            animation: itemReveal 0.4s ease-out forwards;
         }
-        .total-price {
-            font-size: 20px;
-            font-weight: bold;
-            color: #e67e22;
+        
+        @keyframes itemReveal {
+            to { opacity: 1; transform: translateX(0); }
         }
-        .change {
-            font-size: 20px;
-            font-weight: bold;
-            color: #27ae60;
-        }
-        .insufficient {
-            color: #e74c3c;
-        }
-        .processing-fee {
-            color: #3498db;
-        }
+        
+        .result-item:nth-child(1) { animation-delay: 0.2s; }
+        .result-item:nth-child(2) { animation-delay: 0.3s; }
+        .result-item:nth-child(3) { animation-delay: 0.4s; }
+        .result-item:nth-child(4) { animation-delay: 0.5s; }
+        .result-item:nth-child(5) { animation-delay: 0.6s; }
+        
         .grand-total {
-            font-size: 22px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 2px solid #eee;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px dashed var(--primary);
         }
-        .info-text {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
+        
+        .change.positive {
+            color: var(--secondary);
+        }
+        
+        .change.negative {
+            color: var(--danger);
+        }
+        
+        .insufficient-funds {
+            color: var(--danger);
+            margin-top: 16px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+            animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+        
+        .coin-animation {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: gold;
+            border-radius: 50%;
+            box-shadow: 0 0 10px gold;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        @media (max-width: 480px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .input-group {
+                margin-bottom: 16px;
+            }
+            
+            .result-box {
+                padding: 16px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>my chicken</h1>
-        
-        <div class="input-group">
-            <label for="weight">Berat Total (kg)</label>
-            <input type="number" id="weight" step="0.01" min="0.01" placeholder="Contoh: 3.5" required>
+        <div class="header">
+            <h1>My Chicken Calculator</h1>
+            <p>Hitung harga ayam dengan mudah</p>
         </div>
         
-        <div class="input-group">
-            <label for="price-per-kg">Harga per kg (Rp)</label>
-            <input type="number" id="price-per-kg" min="1" placeholder="Contoh: 35000" required>
-        </div>
-        
-        <div class="input-group">
-            <label for="bubut-quantity">Jumlah Ayam yang Dibubut</label>
-            <input type="number" id="bubut-quantity" min="0" placeholder="Masukkan jumlah ayam" value="0">
-            <div class="info-text">Biaya bubut Rp 5.000 per ekor</div>
-        </div>
-        
-        <div class="input-group">
-            <label for="amount-paid">Uang Dibayarkan (Rp)</label>
-            <input type="number" id="amount-paid" min="1" placeholder="Masukkan jumlah uang" required>
-        </div>
-        
-        <button onclick="calculate()">Hitung Total</button>
-        
-        <div id="result" class="result-box">
-            <h3 class="result-title">Rincian Pembayaran</h3>
-            
-            <div class="result-item">
-                <span>Harga Ayam:</span>
-                <span id="chicken-price">Rp 0</span>
+        <div class="content">
+            <div class="input-group">
+                <label for="weight">Berat Total (kg)</label>
+                <input type="number" id="weight" step="0.01" min="0.01" placeholder="Contoh: 3.5" required>
             </div>
             
-            <div class="result-item">
-                <span>Biaya Bubut:</span>
-                <span class="processing-fee" id="processing-fee">Rp 0</span>
+            <div class="input-group">
+                <label for="price-per-kg">Harga per kg (Rp)</label>
+                <input type="number" id="price-per-kg" min="1" placeholder="Contoh: 35000" required>
             </div>
             
-            <div class="result-item grand-total">
-                <span>TOTAL:</span>
-                <span id="grand-total">Rp 0</span>
+            <div class="input-group">
+                <label for="bubut-quantity">Jumlah Ayam yang Dibubut</label>
+                <input type="number" id="bubut-quantity" min="0" placeholder="Masukkan jumlah ayam" value="0">
+                <span class="info-text">Biaya bubut Rp 5.000 per ekor</span>
             </div>
             
-            <div class="result-item">
-                <span>Uang Dibayarkan:</span>
-                <span id="paid-amount">Rp 0</span>
+            <div class="input-group">
+                <label for="amount-paid">Uang Dibayarkan (Rp)</label>
+                <input type="number" id="amount-paid" min="1" placeholder="Masukkan jumlah uang" required>
             </div>
             
-            <div class="result-item">
-                <span>Kembalian:</span>
-                <span id="change-amount" class="change">Rp 0</span>
+            <button class="btn" onclick="calculate()">Hitung Total</button>
+            
+            <div id="insufficient-funds" class="insufficient-funds">
+                Uang tidak cukup! Silakan tambah jumlah pembayaran.
+            </div>
+            
+            <div id="result" class="result-box">
+                <h3 class="result-title">Rincian Pembayaran</h3>
+                
+                <div class="result-item">
+                    <span>Harga Ayam:</span>
+                    <span id="chicken-price">Rp 0</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>Biaya Bubut:</span>
+                    <span id="processing-fee">Rp 0</span>
+                </div>
+                
+                <div class="result-item grand-total">
+                    <span>TOTAL:</span>
+                    <span id="grand-total">Rp 0</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>Uang Dibayarkan:</span>
+                    <span id="paid-amount">Rp 0</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>Kembalian:</span>
+                    <span id="change-amount" class="change positive">Rp 0</span>
+                </div>
             </div>
         </div>
     </div>
@@ -177,17 +405,17 @@
             
             // Validasi input
             if (!weight || weight <= 0) {
-                alert("Masukkan berat ayam yang valid!");
+                showError("Masukkan berat ayam yang valid!");
                 return;
             }
             
             if (!pricePerKg || pricePerKg <= 0) {
-                alert("Masukkan harga per kg yang valid!");
+                showError("Masukkan harga per kg yang valid!");
                 return;
             }
             
             if (!amountPaid || amountPaid <= 0) {
-                alert("Masukkan jumlah uang yang valid!");
+                showError("Masukkan jumlah uang yang valid!");
                 return;
             }
             
@@ -203,29 +431,127 @@
             // Hitung kembalian
             const change = amountPaid - grandTotal;
             
-            // Tampilkan hasil
-            document.getElementById('chicken-price').textContent = formatRupiah(chickenPrice);
-            document.getElementById('processing-fee').textContent = formatRupiah(processingFee);
-            document.getElementById('grand-total').textContent = formatRupiah(grandTotal);
-            document.getElementById('paid-amount').textContent = formatRupiah(amountPaid);
+            // Sembunyikan semua hasil terlebih dahulu
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('insufficient-funds').style.display = 'none';
             
-            // Tampilkan kembalian
-            const changeElement = document.getElementById('change-amount');
+            // Jika uang cukup, tampilkan hasil dengan animasi
             if (change >= 0) {
-                changeElement.textContent = formatRupiah(change);
-                changeElement.className = 'change';
+                document.getElementById('chicken-price').textContent = formatRupiah(chickenPrice);
+                document.getElementById('processing-fee').textContent = formatRupiah(processingFee);
+                document.getElementById('grand-total').textContent = formatRupiah(grandTotal);
+                document.getElementById('paid-amount').textContent = formatRupiah(amountPaid);
+                document.getElementById('change-amount').textContent = formatRupiah(change);
+                document.getElementById('change-amount').className = 'change positive';
+                
+                // Tampilkan hasil dengan animasi
+                const resultBox = document.getElementById('result');
+                resultBox.style.display = 'block';
+                resultBox.style.animation = 'none';
+                void resultBox.offsetWidth; // Trigger reflow
+                resultBox.style.animation = 'fadeInScale 0.6s cubic-bezier(0.22, 1, 0.36, 1)';
+                
+                // Reset animasi item
+                const items = document.querySelectorAll('.result-item');
+                items.forEach((item, index) => {
+                    item.style.animation = 'none';
+                    void item.offsetWidth;
+                    item.style.animation = `itemReveal 0.4s ease-out ${index * 0.1 + 0.2}s forwards`;
+                });
+                
+                // Animasi koin untuk kembalian
+                if (change > 0) {
+                    createCoinAnimation(change);
+                }
             } else {
-                changeElement.textContent = formatRupiah(Math.abs(change));
-                changeElement.className = 'change insufficient';
-                alert(`Uang tidak cukup! Kurang Rp ${Math.abs(change).toLocaleString('id-ID')}`);
+                // Jika uang tidak cukup, tampilkan pesan dengan animasi
+                const insufficientFunds = document.getElementById('insufficient-funds');
+                insufficientFunds.style.display = 'block';
+                insufficientFunds.style.animation = 'none';
+                void insufficientFunds.offsetWidth;
+                insufficientFunds.style.animation = 'shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97)';
             }
-            
-            // Tampilkan hasil
-            document.getElementById('result').style.display = 'block';
         }
         
         function formatRupiah(amount) {
             return 'Rp ' + amount.toLocaleString('id-ID');
+        }
+        
+        function showError(message) {
+            alert(message);
+        }
+        
+        function createCoinAnimation(amount) {
+            const button = document.querySelector('.btn');
+            const changeAmount = document.getElementById('change-amount');
+            const coinsCount = Math.min(Math.floor(amount / 5000), 10); // Max 10 coins
+            
+            for (let i = 0; i < coinsCount; i++) {
+                setTimeout(() => {
+                    const coin = document.createElement('div');
+                    coin.className = 'coin-animation';
+                    document.body.appendChild(coin);
+                    
+                    // Position coin
+                    const buttonRect = button.getBoundingClientRect();
+                    const changeRect = changeAmount.getBoundingClientRect();
+                    
+                    const startX = buttonRect.left + buttonRect.width / 2;
+                    const startY = buttonRect.top + buttonRect.height / 2;
+                    const endX = changeRect.left + changeRect.width / 2;
+                    const endY = changeRect.top + changeRect.height / 2;
+                    
+                    coin.style.left = `${startX}px`;
+                    coin.style.top = `${startY}px`;
+                    coin.style.opacity = '1';
+                    
+                    // Animate coin
+                    const duration = 800 + Math.random() * 400;
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 50 + Math.random() * 50;
+                    const controlX1 = startX + Math.cos(angle) * distance;
+                    const controlY1 = startY + Math.sin(angle) * distance - 100;
+                    const controlX2 = endX + Math.cos(angle + Math.PI) * distance;
+                    const controlY2 = endY + Math.sin(angle + Math.PI) * distance - 50;
+                    
+                    const keyframes = [
+                        { 
+                            transform: 'scale(0.5)',
+                            left: `${startX}px`,
+                            top: `${startY}px`,
+                            opacity: 1
+                        },
+                        { 
+                            transform: 'scale(1)',
+                            left: `${controlX1}px`,
+                            top: `${controlY1}px`,
+                            opacity: 1
+                        },
+                        { 
+                            transform: 'scale(0.8)',
+                            left: `${controlX2}px`,
+                            top: `${controlY2}px`,
+                            opacity: 1
+                        },
+                        { 
+                            transform: 'scale(1)',
+                            left: `${endX}px`,
+                            top: `${endY}px`,
+                            opacity: 0
+                        }
+                    ];
+                    
+                    const options = {
+                        duration: duration,
+                        easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                        fill: 'forwards'
+                    };
+                    
+                    coin.animate(keyframes, options).onfinish = () => {
+                        coin.remove();
+                    };
+                }, i * 150);
+            }
         }
     </script>
 </body>
