@@ -64,8 +64,8 @@
             padding: 24px;
             text-align: center;
             position: relative;
-            overflow: hidden;
-        }
+            overflow: visible; /* Ubah dari hidden ke visible */
+         }
         
         .header::before {
             content: "";
@@ -433,6 +433,7 @@
             color: white;
             cursor: pointer;
             transition: all 0.3s ease;
+            z-index: 100; /* Tambahkan ini */
         }
         
         .history-btn:hover {
@@ -441,7 +442,7 @@
         }
         
         .history-panel {
-            position: absolute;
+            position: fixed; /* Ubah dari absolute ke fixed */
             top: 0;
             right: -100%;
             width: 80%;
@@ -451,12 +452,12 @@
             transition: all 0.3s ease;
             padding: 20px;
             overflow-y: auto;
-            z-index: 10;
+            z-index: 1000; /* Pastikan z-index lebih tinggi */
         }
-        
-        .history-panel.active {
-            right: 0;
-        }
+    
+    .history-panel.active {
+        right: 0;
+    }
         
         .history-header {
             display: flex;
@@ -487,6 +488,8 @@
             font-size: 20px;
             cursor: pointer;
             color: var(--gray);
+            padding: 5px;
+            margin-left: 10px;
         }
         
         .empty-history {
@@ -763,7 +766,12 @@
                 soundToggle.checked = false;
             }
         });
-        
+        // Tambahkan ini setelah event listener yang ada
+        document.addEventListener('click', (e) => {
+         if (!historyPanel.contains(e.target) && e.target !== historyBtn) {
+           historyPanel.classList.remove('active');
+          }
+        });
         // Toggle history panel
         historyBtn.addEventListener('click', () => {
             historyPanel.classList.add('active');
@@ -1167,4 +1175,4 @@
         }
     </script>
 </body>
-</html>
+                    </html>
