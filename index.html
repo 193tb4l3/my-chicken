@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>my chicken</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #e67e22;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #d35400;
+        }
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+        .result-title {
+            font-size: 18px;
+            margin-top: 0;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .result-item {
+            margin: 15px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .total-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e67e22;
+        }
+        .change {
+            font-size: 20px;
+            font-weight: bold;
+            color: #27ae60;
+        }
+        .insufficient {
+            color: #e74c3c;
+        }
+        .processing-fee {
+            color: #3498db;
+        }
+        .grand-total {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #eee;
+        }
+        .info-text {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>my chicken</h1>
+        
+        <div class="input-group">
+            <label for="weight">Berat Total (kg)</label>
+            <input type="number" id="weight" step="0.01" min="0.01" placeholder="Contoh: 3.5" required>
+        </div>
+        
+        <div class="input-group">
+            <label for="price-per-kg">Harga per kg (Rp)</label>
+            <input type="number" id="price-per-kg" min="1" placeholder="Contoh: 35000" required>
+        </div>
+        
+        <div class="input-group">
+            <label for="bubut-quantity">Jumlah Ayam yang Dibubut</label>
+            <input type="number" id="bubut-quantity" min="0" placeholder="Masukkan jumlah ayam" value="0">
+            <div class="info-text">Biaya bubut Rp 5.000 per ekor</div>
+        </div>
+        
+        <div class="input-group">
+            <label for="amount-paid">Uang Dibayarkan (Rp)</label>
+            <input type="number" id="amount-paid" min="1" placeholder="Masukkan jumlah uang" required>
+        </div>
+        
+        <button onclick="calculate()">Hitung Total</button>
+        
+        <div id="result" class="result-box">
+            <h3 class="result-title">Rincian Pembayaran</h3>
+            
+            <div class="result-item">
+                <span>Harga Ayam:</span>
+                <span id="chicken-price">Rp 0</span>
+            </div>
+            
+            <div class="result-item">
+                <span>Biaya Bubut:</span>
+                <span class="processing-fee" id="processing-fee">Rp 0</span>
+            </div>
+            
+            <div class="result-item grand-total">
+                <span>TOTAL:</span>
+                <span id="grand-total">Rp 0</span>
+            </div>
+            
+            <div class="result-item">
+                <span>Uang Dibayarkan:</span>
+                <span id="paid-amount">Rp 0</span>
+            </div>
+            
+            <div class="result-item">
+                <span>Kembalian:</span>
+                <span id="change-amount" class="change">Rp 0</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const PROCESSING_FEE = 5000; // Rp 5.000 per ekor ayam
+        
+        function calculate() {
+            // Ambil nilai input
+            const weight = parseFloat(document.getElementById('weight').value);
+            const pricePerKg = parseFloat(document.getElementById('price-per-kg').value);
+            const bubutQuantity = parseInt(document.getElementById('bubut-quantity').value) || 0;
+            const amountPaid = parseFloat(document.getElementById('amount-paid').value);
+            
+            // Validasi input
+            if (!weight || weight <= 0) {
+                alert("Masukkan berat ayam yang valid!");
+                return;
+            }
+            
+            if (!pricePerKg || pricePerKg <= 0) {
+                alert("Masukkan harga per kg yang valid!");
+                return;
+            }
+            
+            if (!amountPaid || amountPaid <= 0) {
+                alert("Masukkan jumlah uang yang valid!");
+                return;
+            }
+            
+            // Hitung harga ayam
+            const chickenPrice = weight * pricePerKg;
+            
+            // Hitung biaya bubut
+            const processingFee = bubutQuantity * PROCESSING_FEE;
+            
+            // Hitung total keseluruhan
+            const grandTotal = chickenPrice + processingFee;
+            
+            // Hitung kembalian
+            const change = amountPaid - grandTotal;
+            
+            // Tampilkan hasil
+            document.getElementById('chicken-price').textContent = formatRupiah(chickenPrice);
+            document.getElementById('processing-fee').textContent = formatRupiah(processingFee);
+            document.getElementById('grand-total').textContent = formatRupiah(grandTotal);
+            document.getElementById('paid-amount').textContent = formatRupiah(amountPaid);
+            
+            // Tampilkan kembalian
+            const changeElement = document.getElementById('change-amount');
+            if (change >= 0) {
+                changeElement.textContent = formatRupiah(change);
+                changeElement.className = 'change';
+            } else {
+                changeElement.textContent = formatRupiah(Math.abs(change));
+                changeElement.className = 'change insufficient';
+                alert(`Uang tidak cukup! Kurang Rp ${Math.abs(change).toLocaleString('id-ID')}`);
+            }
+            
+            // Tampilkan hasil
+            document.getElementById('result').style.display = 'block';
+        }
+        
+        function formatRupiah(amount) {
+            return 'Rp ' + amount.toLocaleString('id-ID');
+        }
+    </script>
+</body>
+</html>
