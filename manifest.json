@@ -1,6 +1,6 @@
 {
-  "name": "my chicken",
-  "short_name": "my chicken",
+  "name": "My chicken Calculator",
+  "short_name": "mMy chicken Calculator",
   "start_url": "index.html",
   "background_color": "#ffffff",
   "theme_color": "#000000",
