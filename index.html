@@ -1172,68 +1172,6 @@
             
             calculateTotal();
         }
-    const API_URL = 'https://docs.google.com/spreadsheets/d/1eDCtymwOHL344zKvPJ_zFSVOWD7iHB97_aDR6jCsiUg/edit?usp=drivesdk';
-
-async function saveToGoogleDrive(data) {
-  try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    const result = await response.json();
-    return result.success;
-  } catch (error) {
-    console.error('Error:', error);
-    return false;
-  }
-}
-
-// Modifikasi fungsi saveToHistory
-async function saveToHistory() {
-  const weight = parseFloat(document.getElementById('weight').value);
-  const pricePerKg = parseFloat(document.getElementById('price-per-kg').value);
-  const bubutQuantity = parseInt(document.getElementById('bubut-quantity').value) || 0;
-  const amountPaid = parseFloat(document.getElementById('amount-paid').value);
-  const change = amountPaid - grandTotal;
-  
-  const data = {
-    weight: weight,
-    pricePerKg: pricePerKg,
-    bubutQuantity: bubutQuantity,
-    total: grandTotal,
-    paid: amountPaid,
-    change: change
-  };
-  
-  // Simpan ke Google Drive terlebih dahulu
-  const googleDriveSuccess = await saveToGoogleDrive(data);
-  
-  if (googleDriveSuccess) {
-    // Simpan ke local storage juga
-    const historyItem = {
-      date: new Date().toLocaleString(),
-      ...data
-    };
-    
-    history.unshift(historyItem);
-    if (history.length > 10) {
-      history = history.slice(0, 10);
-    }
-    
-    localStorage.setItem('chickenCalcHistory', JSON.stringify(history));
-    renderHistory();
-    
-    alert('Data berhasil disimpan ke Google Drive dan riwayat lokal!');
-    playSound(successSound);
-  } else {
-    alert('Gagal menyimpan ke Google Drive, hanya disimpan di riwayat lokal.');
-    playSound(errorSound);
-  }
-}
     </script>
 </body>
                     </html>
